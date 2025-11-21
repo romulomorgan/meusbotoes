@@ -521,9 +521,9 @@ metadata:
     implemented: true
     working: false
     file: "/app/backend/app/routes/buttons.py"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
@@ -531,6 +531,9 @@ metadata:
         - working: false
           agent: "testing"
           comment: "❌ Limit enforcement not working properly. User was able to create more buttons than allowed by their plan. Backend API returns 200 OK instead of 403 error when limit is exceeded. Error message display was fixed in frontend (added toast notifications), but backend limit checking needs investigation."
+        - working: false
+          agent: "testing"
+          comment: "❌ CRITICAL: Limit enforcement completely broken. User subscribed to 'Plano 3 Botões' (3 button limit) but successfully created 4 buttons without any error. Backend logs show: Plan ID: 79da381a-035d-4c68-b549-c06e1943aeac, Limit: 3, but counts only go up to 2 in logs. The limit check logic (count >= limit) is never triggered. All button creation requests return 200 OK instead of 403 Forbidden."
 
   - task: "Plan Upgrade Functionality"
     implemented: true
