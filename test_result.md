@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Verify Phase 3 Button Generation - Login, Navigate to Meus Botões, Create buttons (Google/GitHub), Search functionality, Edit functionality, Delete functionality, Link functionality"
+user_problem_statement: "Verify Phase 5 Plans and Limits - Plans Page (/planos) with 4 plans, Subscribe to Plano 3 Botões, My Plan page (/meus-planos) showing current plan and usage, Limit enforcement when creating buttons, Upgrade functionality"
 
 frontend:
   - task: "Landing Page Content Verification"
