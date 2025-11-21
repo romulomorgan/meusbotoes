@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Verify Phase 2 Authentication and Dashboard - Registration, Login, Dashboard access, Logout, Protected routes, Forgot password, Admin access, and UI verification"
+user_problem_statement: "Verify Phase 3 Button Generation - Login, Navigate to Meus Botões, Create buttons (Google/GitHub), Search functionality, Edit functionality, Delete functionality, Link functionality"
 
 frontend:
   - task: "Landing Page Content Verification"
