@@ -474,63 +474,78 @@ metadata:
 
   - task: "Plans Page Display"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/dashboard/PlansPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Plans page implemented with 4 plans display, subscription functionality, and current plan highlighting. Needs testing for proper plan display and subscription flow."
+        - working: true
+          agent: "testing"
+          comment: "✅ Plans page working perfectly. All 4 plans displayed correctly: Plano 3 Botões (Grátis), Plano 7 Botões (R$ 9,90), Plano 20 Botões (R$ 19,90), Plano Ilimitado (R$ 49,90). Page title 'Escolha seu Plano' displays correctly."
 
   - task: "Plan Subscription Flow"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/dashboard/PlansPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Subscription functionality implemented with API integration and button state changes. Needs testing for 'Assinar Agora' to 'Plano Atual' transition."
+        - working: true
+          agent: "testing"
+          comment: "✅ Subscription flow working correctly. Successfully subscribed to 'Plano 3 Botões' and button changed to 'Plano Atual'. Upgrade to 'Plano 7 Botões' also worked, with proper button state changes and plan transitions."
 
   - task: "My Plan Page Display"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/dashboard/MyPlanPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "My Plan page implemented with current plan display, usage tracking, and progress bar. Needs testing for proper plan information and usage display."
+        - working: true
+          agent: "testing"
+          comment: "✅ My Plan page working correctly after fixing missing Button import. Shows 'Plano 7 Botões' with usage information '3 / 7' and proper progress bar. Fixed JavaScript error that was preventing page from loading."
 
   - task: "Button Creation Limit Enforcement"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/backend/app/routes/buttons.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Limit enforcement implemented in backend with proper error messages. Needs testing for limit checking and error message display when exceeding plan limits."
+        - working: false
+          agent: "testing"
+          comment: "❌ Limit enforcement not working properly. User was able to create more buttons than allowed by their plan. Backend API returns 200 OK instead of 403 error when limit is exceeded. Error message display was fixed in frontend (added toast notifications), but backend limit checking needs investigation."
 
   - task: "Plan Upgrade Functionality"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/dashboard/PlansPage.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Plan upgrade functionality implemented with subscription API. Needs testing for upgrading from one plan to another and verifying increased limits."
+        - working: true
+          agent: "testing"
+          comment: "✅ Plan upgrade functionality working correctly. Successfully upgraded from 'Plano 3 Botões' to 'Plano 7 Botões'. Button states changed properly and user can access higher limits after upgrade."
 
 test_plan:
   current_focus:
