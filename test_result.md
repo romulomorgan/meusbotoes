@@ -270,15 +270,18 @@ test_plan:
 
   - task: "Admin Access Control"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/admin/UserList.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Admin user list page implemented with role-based access control. Needs testing for admin restrictions and normal user access denial."
+        - working: true
+          agent: "testing"
+          comment: "✅ Admin access control working correctly. Regular user attempting to access /admin/usuarios is properly redirected to /painel dashboard, preventing unauthorized access to admin functionality."
 
   - task: "Authentication Context"
     implemented: true
