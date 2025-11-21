@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.models import UserCreate, UserInDB, Token, UserResponse, PasswordResetRequest, PasswordResetConfirm
-from app.security import get_password_hash, verify_password, create_access_token
+from app.security import get_password_hash, verify_password, create_access_token, decode_access_token
 from datetime import timedelta, datetime
 import os
 
