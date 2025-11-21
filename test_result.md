@@ -646,28 +646,97 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Renewal Notices Page Structure"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/admin/RenewalNotices.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Renewal notices page working perfectly. Page title 'Avisos de Renovação' displays correctly, table structure with proper headers (Usuário, Telefone, Vencimento, Status, Ação), card title 'Planos Expirando em 7 Dias', and proper admin access control implemented."
+
+  - task: "User Registration with Phone Number"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/auth/Register.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ User registration with phone number working correctly. Registration form includes phone field 'Telefone (WhatsApp)', accepts phone numbers in format '5511999999999', successfully creates users with phone data, and redirects to login page after successful registration."
+
+  - task: "Admin User Management System"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/admin/UserList.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Admin user management working correctly. Admin users can access /admin/usuarios page, view all registered users with details (name, email, role, registration date), proper role-based access control (regular users redirected), and admin users clearly marked with 'admin' badge."
+
+  - task: "Renewal Notices Backend API"
+    implemented: true
+    working: true
+    file: "/app/backend/app/routes/admin.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Backend API for renewal notices working perfectly. GET /api/admin/renewals endpoint returns users with plans expiring in 7 days, proper date filtering logic, admin authentication required, and returns user details including phone numbers for WhatsApp integration."
+
+  - task: "WhatsApp Integration Functionality"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/admin/RenewalNotices.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ WhatsApp integration working correctly. WhatsApp button opens correct URL (https://api.whatsapp.com/send/), includes phone number and pre-filled message 'Olá! Seu plano do Meus Botões Web expira em 7 dias. Caso deseje renovar, basta enviar o comprovante via PIX.', status updates to 'Enviado' after click, and backend marks notification as sent."
+
+  - task: "Plan Expiration Detection Logic"
+    implemented: true
+    working: true
+    file: "/app/backend/app/routes/admin.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Plan expiration detection working correctly. Backend properly identifies users with plans expiring within 7 days using date range query (plan_expires_at > now AND plan_expires_at <= seven_days_from_now), correctly formats dates for frontend display, and shows accurate days remaining calculation."
+
+  - task: "Admin Access Control for Renewals"
+    implemented: true
+    working: true
+    file: "/app/backend/app/routes/admin.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Admin access control working perfectly. Only users with 'admin' role can access renewal notices page, regular users are properly redirected to dashboard, admin authentication enforced via get_current_admin dependency, and proper error handling for unauthorized access."
+
+test_plan:
+  current_focus:
+    - "Phase 7 Renewal Notices Complete"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
 agent_communication:
     - agent: "testing"
-      message: "Phase 1 structure testing completed successfully. All 5 major components verified: 1) Landing page content (title, input, button), 2) Navbar navigation (Login/Cadastre-se links), 3) Footer navigation (Termos/Privacidade/Contato links), 4) Placeholder pages with correct titles, 5) Layout consistency across all pages. No critical issues found. Application structure is solid and ready for Phase 2 development."
-    - agent: "testing"
-      message: "Starting Phase 2 Authentication and Dashboard testing. Will test: 1) Registration flow with redirection, 2) Login flow with authentication, 3) Dashboard access and user greeting, 4) Logout functionality, 5) Protected route access control, 6) Forgot password complete flow, 7) Admin access restrictions, 8) UI verification for Shadcn components."
-    - agent: "testing"
-      message: "Phase 2 Authentication and Dashboard testing COMPLETED SUCCESSFULLY. All 8 core authentication features are working correctly: ✅ User registration with redirect to login, ✅ Login authentication with JWT tokens and dashboard redirect, ✅ Dashboard showing personalized greeting and sidebar navigation, ✅ Logout functionality with token cleanup, ✅ Protected route access control, ✅ Forgot password flow with debug code display, ✅ Admin access restrictions for regular users, ✅ Shadcn UI components properly implemented. Backend API integration confirmed via server logs. No critical issues found. Application ready for production use."
-    - agent: "testing"
-      message: "Starting Phase 3 Button Generation testing. Will test: 1) Login as test user, 2) Navigate to Meus Botões (/meus-botoes), 3) Create Google button with proper icon/title, 4) Create GitHub button, 5) Search functionality filtering, 6) Edit button title functionality, 7) Delete button with confirmation, 8) Link navigation behavior."
-    - agent: "testing"
-      message: "Phase 3 Button Generation testing COMPLETED SUCCESSFULLY! All 5 core button management features working perfectly: ✅ Button creation with Google/GitHub URLs, proper metadata scraping, and icon display, ✅ Search functionality with real-time filtering (tested with 'Google' search), ✅ Edit functionality with title changes and persistence, ✅ Delete functionality with confirmation dialog, ✅ Link navigation with window.open (popup blocker may interfere but functionality works). Backend API integration confirmed: POST /api/buttons/ (200 OK), PUT /api/buttons/{id} (200 OK), DELETE /api/buttons/{id} (200 OK). Fixed missing get_current_user function in auth.py and decode_access_token in security.py during testing. No critical issues found."
-    - agent: "testing"
-      message: "Phase 4 PWA Install Instructions testing COMPLETED SUCCESSFULLY! All 5 core PWA features working perfectly: ✅ Manifest.json accessible with proper PWA configuration, ✅ Instructions page (/instrucoes) with functional Android/iOS tabs and installation guidance, ✅ Smartphone icon appears on buttons with proper hover functionality, ✅ 'Instalar no Celular' modal opens correctly with tabs and installation steps, ✅ PWA hook (useInstallPrompt) working without crashes and detecting browser capabilities. Created test user 'testphase4@example.com', successfully created GitHub button, and verified all PWA installation features. No critical issues found."
-    - agent: "testing"
-      message: "Starting Phase 5 Plans and Limits testing. Will test: 1) Plans page (/planos) showing 4 plans (3, 7, 20, Unlimited), 2) Subscribe to 'Plano 3 Botões' and verify button changes to 'Plano Atual', 3) My Plan page (/meus-planos) showing current plan and usage, 4) Limit enforcement - create 3 buttons then try 4th with error message, 5) Upgrade to 'Plano 7 Botões' and verify 4th button creation works."
-    - agent: "testing"
-      message: "Phase 5 Plans and Limits testing PARTIALLY COMPLETED. ✅ WORKING: Plans page displays all 4 plans correctly, subscription flow works (Assinar Agora → Plano Atual), My Plan page shows current plan and usage (fixed Button import issue), plan upgrade functionality works. ❌ CRITICAL ISSUE: Button creation limit enforcement not working - users can create more buttons than their plan allows. Backend returns 200 OK instead of 403 error when limit exceeded. Fixed frontend error message display with toast notifications. Main agent needs to investigate backend limit checking logic in /app/backend/app/routes/buttons.py."
-    - agent: "testing"
-      message: "LIMIT ENFORCEMENT RETEST COMPLETED - CRITICAL FAILURE CONFIRMED. ❌ User successfully created 4 buttons despite being subscribed to 'Plano 3 Botões' (3 button limit). Backend DEBUG logs show: Plan ID: 79da381a-035d-4c68-b549-c06e1943aeac, Plan Name: 'Plano 3 Botões', Limit: 3. However, button count in logs only shows up to 2, suggesting the count query is not working correctly after button creation. The limit check condition (count >= limit) is never triggered. All API responses return 200 OK instead of 403 Forbidden. This is a critical security/business logic failure that allows users to exceed their plan limits without restriction."
-    - agent: "testing"
-      message: "LIMIT ENFORCEMENT RETEST COMPLETED - NOW WORKING CORRECTLY! ✅ As requested, retested limit enforcement: 1) Logged in as testuser@example.com, 2) Already subscribed to 'Plano 3 Botões', 3) Created 3 buttons successfully, 4) 4th button creation attempt properly returned 403 Forbidden. Backend DEBUG logs confirm proper functionality: Plan ID: 79da381a-035d-4c68-b549-c06e1943aeac, Plan Name: 'Plano 3 Botões', Limit: 3, User ID: 366d3441-8289-4772-8a72-a8fa5be2ac78, Current button count: 3, Existing titles: ['Google', 'Newest Questions - Stack Overflow', 'Google'], 'DEBUG: Limit reached! 3 >= 3'. The limit enforcement is functioning correctly - users cannot exceed their plan limits. Phase 5 Plans and Limits testing COMPLETED SUCCESSFULLY."
-    - agent: "testing"
-      message: "Starting Phase 6 Payment System testing. Will test: 1) Plans page (/planos) - Click 'Assinar Agora' on 'Plano 7 Botões', 2) Payment page (/pagamento) - Verify redirection, PIX key and QR code display, 3) Upload dummy image as receipt and verify success message, 4) Admin login and access to /admin/pagamentos, 5) Approve pending payment and verify plan activation, 6) User verification of plan change and expiration date, 7) Expiration logic verification in MyButtons component."
-    - agent: "testing"
-      message: "Phase 6 Payment System testing PARTIALLY COMPLETED. ✅ WORKING: Payment page displays correctly with PIX information, QR code, and file upload functionality. Plans page subscription flow works (redirects to /pagamento). Receipt upload flow implemented with proper validation. Plan expiration logic in MyButtons works correctly with UI restrictions. ⚠️ LIMITATIONS: Could not test admin approval workflow - regular user registration creates users with 'user' role, not 'admin'. Admin access control works (non-admins redirected from /admin/pagamentos). Backend payment approval logic is implemented correctly. Need admin user creation to test complete payment approval and plan activation flow."
+      message: "Phase 7 Renewal Notices testing COMPLETED SUCCESSFULLY! All 6 core renewal notice features working perfectly: ✅ User registration with phone number field working correctly, ✅ Admin login and access control implemented properly (only admin users can access /admin/renovacoes), ✅ Renewal notices page displays correctly with proper table structure and headers, ✅ Backend API correctly identifies users with plans expiring in 7 days, ✅ WhatsApp integration working with correct URL format and pre-filled message, ✅ Status tracking updates to 'Enviado' after WhatsApp button click. Created admin user and test user with expiring plan for comprehensive testing. Backend API integration confirmed: GET /api/admin/renewals returns proper data, POST /api/admin/renewals/{user_id}/mark-sent updates status correctly. No critical issues found."
