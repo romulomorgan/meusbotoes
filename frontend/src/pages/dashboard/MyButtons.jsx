@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Search, Plus, Loader2, Upload } from "lucide-react";
-import { useToast } from "sonner";
+import { Search, Plus, Loader2 } from "lucide-react";
 import AppButton from "@/components/buttons/AppButton";
+import InstallInstructions from "@/components/pwa/InstallInstructions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,10 +33,12 @@ const MyButtons = () => {
   const [deletingButton, setDeletingButton] = useState(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   
+  // Instructions State
+  const [showInstructions, setShowInstructions] = useState(false);
+  
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
   const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit } = useForm();
   
-  // For file upload in edit
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
@@ -62,6 +64,8 @@ const MyButtons = () => {
       });
       setButtons([response.data, ...buttons]);
       reset();
+      // Show instructions after creating first button or randomly
+      setShowInstructions(true);
     } catch (error) {
       console.error("Failed to create button", error);
     } finally {
@@ -80,7 +84,6 @@ const MyButtons = () => {
     try {
       let iconUrl = editingButton.icon_url;
 
-      // Handle file upload if present
       if (selectedFile) {
         const formData = new FormData();
         formData.append('file', selectedFile);
@@ -181,6 +184,7 @@ const MyButtons = () => {
               button={button} 
               onEdit={onEditButton}
               onDelete={setDeletingButton}
+              onShowInstructions={() => setShowInstructions(true)}
             />
           ))}
         </div>
@@ -243,6 +247,12 @@ const MyButtons = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Install Instructions Modal */}
+      <InstallInstructions 
+        open={showInstructions} 
+        onOpenChange={setShowInstructions} 
+      />
     </div>
   );
 };

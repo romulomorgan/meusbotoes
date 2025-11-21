@@ -1,14 +1,12 @@
 import React from 'react';
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Smartphone } from "lucide-react";
 
-const AppButton = ({ button, onEdit, onDelete }) => {
+const AppButton = ({ button, onEdit, onDelete, onShowInstructions }) => {
   const handleOpenLink = () => {
     window.open(button.original_url, '_blank', 'noopener,noreferrer');
   };
 
-  // Handle icon URL: if it starts with /static, prepend backend URL
   const getIconUrl = (url) => {
     if (url && url.startsWith('/static')) {
       return `${process.env.REACT_APP_BACKEND_URL}${url}`;
@@ -20,6 +18,15 @@ const AppButton = ({ button, onEdit, onDelete }) => {
     <div className="group relative flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-muted/50 transition-colors">
       {/* Action Buttons (Visible on Hover) */}
       <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="h-6 w-6 bg-background/80 backdrop-blur shadow-sm hover:bg-primary/10 hover:text-primary"
+          onClick={(e) => { e.stopPropagation(); onShowInstructions(); }}
+          title="Instalar no celular"
+        >
+          <Smartphone className="h-3 w-3" />
+        </Button>
         <Button 
           variant="ghost" 
           size="icon" 

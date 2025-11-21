@@ -16,6 +16,7 @@ import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import Overview from "./pages/dashboard/Overview";
 import MyButtons from "./pages/dashboard/MyButtons";
 import UserList from "./pages/admin/UserList";
+import InstructionsPage from "./pages/InstructionsPage";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
             <Route path="termos" element={<PlaceholderPage />} />
             <Route path="privacidade" element={<PlaceholderPage />} />
             <Route path="contato" element={<PlaceholderPage />} />
+            
+            <Route path="instrucoes" element={<InstructionsPage />} />
           </Route>
 
           {/* Protected Dashboard Routes */}
