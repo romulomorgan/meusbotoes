@@ -11,7 +11,8 @@ import {
   Users,
   Menu,
   ShoppingBag,
-  BellRing
+  BellRing,
+  ArrowLeft
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -23,6 +24,10 @@ const DashboardLayout = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   const NavItem = ({ to, icon: Icon, label }) => {
@@ -83,6 +88,9 @@ const DashboardLayout = () => {
     </div>
   );
 
+  // Check if we are on the root dashboard page to decide whether to show "Voltar"
+  const isRootDashboard = location.pathname === '/painel';
+
   return (
     <div className="flex min-h-screen bg-muted/20">
       {/* Desktop Sidebar */}
@@ -90,23 +98,44 @@ const DashboardLayout = () => {
         <SidebarContent />
       </aside>
 
-      {/* Mobile Sidebar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 border-b bg-background flex items-center px-4 z-50">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
-        <span className="ml-4 font-bold">Meus Botões</span>
+      {/* Mobile Header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 border-b bg-background flex items-center justify-between px-4 z-50">
+        <div className="flex items-center gap-2">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-64">
+              <SidebarContent />
+            </SheetContent>
+          </Sheet>
+          <span className="font-bold">Meus Botões</span>
+        </div>
+        
+        {/* Mobile Logout/Back */}
+        <div className="flex items-center gap-2">
+           {!isRootDashboard && (
+             <Button variant="ghost" size="icon" onClick={handleBack} title="Voltar">
+               <ArrowLeft className="h-5 w-5" />
+             </Button>
+           )}
+        </div>
       </div>
 
       {/* Main Content */}
       <main className="flex-1 md:ml-64 pt-16 md:pt-0">
+        {/* Desktop Header / Breadcrumb Area (Optional, but good for "Voltar") */}
+        <div className="hidden md:flex h-16 items-center px-8 border-b bg-background/50 backdrop-blur sticky top-0 z-40">
+           {!isRootDashboard && (
+             <Button variant="ghost" size="sm" onClick={handleBack} className="gap-2 text-muted-foreground hover:text-foreground">
+               <ArrowLeft className="h-4 w-4" />
+               Voltar
+             </Button>
+           )}
+        </div>
+
         <div className="container p-4 md:p-8 max-w-6xl mx-auto">
           <Outlet />
         </div>

@@ -1,10 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
+import { useAuth } from '../../context/AuthContext';
+import { LogOut, LayoutDashboard } from "lucide-react";
 
 const Navbar = () => {
-  // Mock login state - set to false as per requirements (buttons disabled/hidden)
-  const isLoggedIn = false; 
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <nav className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
@@ -18,10 +25,19 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          {isLoggedIn ? (
-            <Button variant="ghost" asChild>
-              <Link to="/meus-botoes">Meus Botões</Link>
-            </Button>
+          {user ? (
+            <>
+              <Button variant="ghost" asChild>
+                <Link to="/painel">
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Painel
+                </Link>
+              </Button>
+              <Button variant="outline" onClick={handleLogout}>
+                <LogOut className="mr-2 h-4 w-4" />
+                Sair
+              </Button>
+            </>
           ) : (
             <>
               <Button variant="ghost" asChild className="hidden md:inline-flex">
