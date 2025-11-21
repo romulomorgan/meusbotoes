@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Search, Plus, Loader2 } from "lucide-react";
 import AppButton from "@/components/buttons/AppButton";
 import InstallInstructions from "@/components/pwa/InstallInstructions";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
