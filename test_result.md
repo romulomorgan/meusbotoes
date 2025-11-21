@@ -549,12 +549,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Plans Page Display"
-    - "Plan Subscription Flow"
-    - "My Plan Page Display"
     - "Button Creation Limit Enforcement"
-    - "Plan Upgrade Functionality"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Button Creation Limit Enforcement"
   test_all: false
   test_priority: "high_first"
 
