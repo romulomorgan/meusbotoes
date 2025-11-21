@@ -560,6 +560,77 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Payment Page Display and PIX Information"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/PaymentPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Payment page implemented with PIX key display, QR code generation, and file upload functionality. Needs testing for proper redirection from plans page and PIX information display."
+
+  - task: "Payment Receipt Upload Flow"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/PaymentPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Receipt upload functionality implemented with file validation, form submission, and success message display. Needs testing for complete upload flow and backend integration."
+
+  - task: "Admin Payment Approval System"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/admin/PaymentList.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Admin payment list page implemented with pending payments display, receipt viewing, and approve/reject functionality. Needs testing for admin access and payment approval flow."
+
+  - task: "Plan Activation After Payment Approval"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/app/routes/payments.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Backend payment approval logic implemented with plan activation and expiration date setting. Needs testing for proper plan activation after admin approval."
+
+  - task: "Plan Expiration Logic in MyButtons"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/MyButtons.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Plan expiration checking implemented in MyButtons component with UI restrictions and warning messages. Needs testing for proper expiration detection and UI behavior."
+
+test_plan:
+  current_focus:
+    - "Payment Page Display and PIX Information"
+    - "Payment Receipt Upload Flow"
+    - "Admin Payment Approval System"
+    - "Plan Activation After Payment Approval"
+    - "Plan Expiration Logic in MyButtons"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
 agent_communication:
     - agent: "testing"
       message: "Phase 1 structure testing completed successfully. All 5 major components verified: 1) Landing page content (title, input, button), 2) Navbar navigation (Login/Cadastre-se links), 3) Footer navigation (Termos/Privacidade/Contato links), 4) Placeholder pages with correct titles, 5) Layout consistency across all pages. No critical issues found. Application structure is solid and ready for Phase 2 development."
@@ -581,3 +652,5 @@ agent_communication:
       message: "LIMIT ENFORCEMENT RETEST COMPLETED - CRITICAL FAILURE CONFIRMED. ❌ User successfully created 4 buttons despite being subscribed to 'Plano 3 Botões' (3 button limit). Backend DEBUG logs show: Plan ID: 79da381a-035d-4c68-b549-c06e1943aeac, Plan Name: 'Plano 3 Botões', Limit: 3. However, button count in logs only shows up to 2, suggesting the count query is not working correctly after button creation. The limit check condition (count >= limit) is never triggered. All API responses return 200 OK instead of 403 Forbidden. This is a critical security/business logic failure that allows users to exceed their plan limits without restriction."
     - agent: "testing"
       message: "LIMIT ENFORCEMENT RETEST COMPLETED - NOW WORKING CORRECTLY! ✅ As requested, retested limit enforcement: 1) Logged in as testuser@example.com, 2) Already subscribed to 'Plano 3 Botões', 3) Created 3 buttons successfully, 4) 4th button creation attempt properly returned 403 Forbidden. Backend DEBUG logs confirm proper functionality: Plan ID: 79da381a-035d-4c68-b549-c06e1943aeac, Plan Name: 'Plano 3 Botões', Limit: 3, User ID: 366d3441-8289-4772-8a72-a8fa5be2ac78, Current button count: 3, Existing titles: ['Google', 'Newest Questions - Stack Overflow', 'Google'], 'DEBUG: Limit reached! 3 >= 3'. The limit enforcement is functioning correctly - users cannot exceed their plan limits. Phase 5 Plans and Limits testing COMPLETED SUCCESSFULLY."
+    - agent: "testing"
+      message: "Starting Phase 6 Payment System testing. Will test: 1) Plans page (/planos) - Click 'Assinar Agora' on 'Plano 7 Botões', 2) Payment page (/pagamento) - Verify redirection, PIX key and QR code display, 3) Upload dummy image as receipt and verify success message, 4) Admin login and access to /admin/pagamentos, 5) Approve pending payment and verify plan activation, 6) User verification of plan change and expiration date, 7) Expiration logic verification in MyButtons component."
