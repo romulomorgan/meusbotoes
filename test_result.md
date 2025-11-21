@@ -195,15 +195,18 @@ test_plan:
 
   - task: "User Login Flow"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/auth/Login.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Login page implemented with form validation, Shadcn components, and API integration. Needs testing for authentication and redirection to dashboard."
+        - working: true
+          agent: "testing"
+          comment: "✅ Login flow working correctly. Successfully authenticates user with test credentials, stores JWT token, and redirects to dashboard (/painel). Backend API integration confirmed via logs."
 
   - task: "Dashboard Access and Layout"
     implemented: true
