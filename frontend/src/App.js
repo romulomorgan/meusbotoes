@@ -14,6 +14,7 @@ import LoginPage from "./pages/auth/Login";
 import RegisterPage from "./pages/auth/Register";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword";
 import Overview from "./pages/dashboard/Overview";
+import MyButtons from "./pages/dashboard/MyButtons";
 import UserList from "./pages/admin/UserList";
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
           {/* Protected Dashboard Routes */}
           <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
             <Route path="painel" element={<Overview />} />
-            <Route path="meus-botoes" element={<PlaceholderPage />} />
+            <Route path="meus-botoes" element={<MyButtons />} />
             <Route path="planos" element={<PlaceholderPage />} />
             <Route path="pagamento" element={<PlaceholderPage />} />
             <Route path="configuracoes" element={<PlaceholderPage />} />
