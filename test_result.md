@@ -472,9 +472,73 @@ metadata:
   test_sequence: 4
   run_ui: true
 
+  - task: "Plans Page Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/PlansPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Plans page implemented with 4 plans display, subscription functionality, and current plan highlighting. Needs testing for proper plan display and subscription flow."
+
+  - task: "Plan Subscription Flow"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/PlansPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Subscription functionality implemented with API integration and button state changes. Needs testing for 'Assinar Agora' to 'Plano Atual' transition."
+
+  - task: "My Plan Page Display"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/MyPlanPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "My Plan page implemented with current plan display, usage tracking, and progress bar. Needs testing for proper plan information and usage display."
+
+  - task: "Button Creation Limit Enforcement"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/app/routes/buttons.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Limit enforcement implemented in backend with proper error messages. Needs testing for limit checking and error message display when exceeding plan limits."
+
+  - task: "Plan Upgrade Functionality"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/dashboard/PlansPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Plan upgrade functionality implemented with subscription API. Needs testing for upgrading from one plan to another and verifying increased limits."
+
 test_plan:
   current_focus:
-    - "Phase 4 PWA Install Instructions Complete"
+    - "Plans Page Display"
+    - "Plan Subscription Flow"
+    - "My Plan Page Display"
+    - "Button Creation Limit Enforcement"
+    - "Plan Upgrade Functionality"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
