@@ -7,6 +7,7 @@ import uuid
 class UserBase(BaseModel):
     email: EmailStr
     full_name: str
+    phone: Optional[str] = None # Added phone
 
 class UserCreate(UserBase):
     password: str
@@ -22,6 +23,9 @@ class UserInDB(UserBase):
     current_plan_id: Optional[str] = None
     plan_expires_at: Optional[datetime] = None
     
+    # Renewal
+    renewal_notice_sent_at: Optional[datetime] = None
+    
     model_config = ConfigDict(extra="ignore")
 
 class UserResponse(UserBase):
@@ -30,6 +34,7 @@ class UserResponse(UserBase):
     role: str
     current_plan_id: Optional[str] = None
     plan_expires_at: Optional[datetime] = None
+    renewal_notice_sent_at: Optional[datetime] = None
 
 class Token(BaseModel):
     access_token: str
@@ -107,6 +112,7 @@ class PaymentCreate(PaymentBase):
 class PaymentInDB(PaymentBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
+    plan_id: str
     receipt_url: str
     status: str = "pending" # pending, approved, rejected
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

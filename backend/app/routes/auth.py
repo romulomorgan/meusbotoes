@@ -3,20 +3,45 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from app.models import UserCreate, UserInDB, Token, UserResponse, PasswordResetRequest, PasswordResetConfirm
 from app.security import get_password_hash, verify_password, create_access_token, decode_access_token
-from datetime import timedelta, datetime
+from datetime import timedelta
 import os
 
 router = APIRouter()
-
-# We need to inject the database. In a larger app we'd use dependency injection properly.
-# For now, we will import 'db' from server.py or pass it. 
-# Circular imports are tricky. Let's use a dependency pattern.
 
 async def get_db():
     from server import db
     return db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncIOMotorDatabase = Depends(get_db)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = decode_access_token(token)
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except Exception:
+        raise credentials_exception
+    
+    user = await db.users.find_one({"email": email})
+    if user is None:
+        raise credentials_exception
+    
+    return user
+
+async def get_current_admin(current_user = Depends(get_current_user)):
+    if current_user.get('role') != 'admin':
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user
 
 @router.post("/register", response_model=UserResponse)
 async def register(user: UserCreate, db: AsyncIOMotorDatabase = Depends(get_db)):
@@ -34,6 +59,7 @@ async def register(user: UserCreate, db: AsyncIOMotorDatabase = Depends(get_db))
     user_in_db = UserInDB(
         email=user.email,
         full_name=user.full_name,
+        phone=user.phone, # Added phone
         hashed_password=hashed_password
     )
     
@@ -101,32 +127,3 @@ async def reset_password(data: PasswordResetConfirm, db: AsyncIOMotorDatabase = 
     await db.password_resets.delete_one({"email": data.email})
     
     return {"message": "Password updated successfully"}
-
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncIOMotorDatabase = Depends(get_db)):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    
-    try:
-        payload = decode_access_token(token)
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except Exception:
-        raise credentials_exception
-    
-    user = await db.users.find_one({"email": email})
-    if user is None:
-        raise credentials_exception
-    
-    return user
-
-async def get_current_admin(current_user = Depends(get_current_user)):
-    if current_user.get('role') != 'admin':
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Admin access required"
-        )
-    return current_user
