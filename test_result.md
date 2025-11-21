@@ -555,9 +555,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Button Creation Limit Enforcement"
-  stuck_tasks:
-    - "Button Creation Limit Enforcement"
+    - "Phase 5 Plans and Limits Complete"
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
