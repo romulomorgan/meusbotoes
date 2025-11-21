@@ -1,4 +1,5 @@
 from fastapi import FastAPI, APIRouter
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,11 +10,8 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List
 import uuid
 from datetime import datetime, timezone
-
-# Import new routers
-# We need to make sure the app module is in path or installed. 
-# Since we are in /app/backend, and app is a folder there, we can import if we run from /app/backend
 import sys
+
 sys.path.append(str(Path(__file__).parent))
 
 ROOT_DIR = Path(__file__).parent
@@ -26,6 +24,11 @@ db = client[os.environ['DB_NAME']]
 
 # Create the main app
 app = FastAPI()
+
+# Mount static files for uploads
+# Ensure directory exists
+Path("/app/backend/uploads").mkdir(parents=True, exist_ok=True)
+app.mount("/static/uploads", StaticFiles(directory="/app/backend/uploads"), name="uploads")
 
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
@@ -63,13 +66,10 @@ async def get_status_checks():
     return status_checks
 
 # Include new routers
-from app.routes import auth, users
+from app.routes import auth, users, buttons
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
-# Admin routes are inside users router for now or we can separate them. 
-# The prompt asked for /admin/users. 
-# Let's add a specific admin router alias if needed, but /api/users/ with admin check covers it.
-# Or we can map /api/admin/users to the same logic.
+api_router.include_router(buttons.router, prefix="/buttons", tags=["buttons"])
 
 # Include the router in the main app
 app.include_router(api_router)
