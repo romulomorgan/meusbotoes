@@ -18,12 +18,18 @@ class UserInDB(UserBase):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     role: str = "user"  # user, admin
     
+    # Plan details
+    current_plan_id: Optional[str] = None
+    plan_expires_at: Optional[datetime] = None
+    
     model_config = ConfigDict(extra="ignore")
 
 class UserResponse(UserBase):
     id: str
     created_at: datetime
     role: str
+    current_plan_id: Optional[str] = None
+    plan_expires_at: Optional[datetime] = None
 
 class Token(BaseModel):
     access_token: str
@@ -65,4 +71,28 @@ class ButtonInDB(ButtonBase):
     model_config = ConfigDict(extra="ignore")
 
 class ButtonResponse(ButtonInDB):
+    pass
+
+# --- Plan Models ---
+class PlanBase(BaseModel):
+    name: str
+    description: str
+    price: float
+    button_limit: int # -1 for unlimited
+    duration_days: int = 30
+
+class PlanCreate(PlanBase):
+    pass
+
+class PlanUpdate(BaseModel):
+    price: Optional[float] = None
+    description: Optional[str] = None
+    button_limit: Optional[int] = None
+
+class PlanInDB(PlanBase):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    
+    model_config = ConfigDict(extra="ignore")
+
+class PlanResponse(PlanInDB):
     pass

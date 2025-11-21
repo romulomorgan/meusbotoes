@@ -26,7 +26,6 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI()
 
 # Mount static files for uploads
-# Ensure directory exists
 Path("/app/backend/uploads").mkdir(parents=True, exist_ok=True)
 app.mount("/static/uploads", StaticFiles(directory="/app/backend/uploads"), name="uploads")
 
@@ -66,10 +65,11 @@ async def get_status_checks():
     return status_checks
 
 # Include new routers
-from app.routes import auth, users, buttons
+from app.routes import auth, users, buttons, plans
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(buttons.router, prefix="/buttons", tags=["buttons"])
+api_router.include_router(plans.router, prefix="/plans", tags=["plans"])
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -87,6 +87,11 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup_event():
+    # Seed plans on startup
+    await plans.seed_plans(db)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

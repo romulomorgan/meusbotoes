@@ -8,6 +8,7 @@ import os
 import shutil
 import uuid
 from pathlib import Path
+from datetime import datetime, timezone
 
 router = APIRouter()
 
@@ -24,7 +25,52 @@ async def create_button(
     current_user = Depends(get_current_user), 
     db: AsyncIOMotorDatabase = Depends(get_db)
 ):
-    # TODO: Phase 5 - Check plan limits here
+    # --- Plan Limit Check ---
+    # 1. Get current plan
+    plan_id = current_user.get('current_plan_id')
+    limit = 0 # Default to 0 if no plan (or maybe a free tier default?)
+    
+    # If user has no plan, let's assume a default free tier of 0 or 1? 
+    # Requirement says "Plano 3 Botões" is one of the plans. 
+    # Let's assume if no plan is assigned, they can't create, OR we auto-assign free plan on register.
+    # For now, if no plan, we'll fetch the "Plano 3 Botões" (price 0) or just block.
+    # Better: Check if plan exists.
+    
+    if plan_id:
+        plan = await db.plans.find_one({"id": plan_id})
+        if plan:
+            limit = plan['button_limit']
+            
+            # Check expiration
+            expires_at_str = current_user.get('plan_expires_at')
+            if expires_at_str:
+                expires_at = datetime.fromisoformat(expires_at_str)
+                # Ensure timezone awareness compatibility
+                if expires_at.tzinfo is None:
+                    expires_at = expires_at.replace(tzinfo=timezone.utc)
+                
+                if datetime.now(timezone.utc) > expires_at:
+                    raise HTTPException(status_code=403, detail="Seu plano expirou. Por favor, renove sua assinatura.")
+    else:
+        # Fallback: If no plan assigned, maybe allow 0 or find the free plan?
+        # Let's look for the free plan (price 0) and use its limit if user has no plan
+        free_plan = await db.plans.find_one({"price": 0.0})
+        if free_plan:
+            limit = free_plan['button_limit']
+        else:
+            limit = 0 # Strict default
+
+    # 2. Count existing buttons
+    count = await db.buttons.count_documents({"user_id": current_user['id']})
+    
+    # 3. Verify limit (if not unlimited i.e. -1)
+    if limit != -1 and count >= limit:
+        raise HTTPException(
+            status_code=403, 
+            detail=f"Seu plano não permite criar mais botões. Limite atual: {limit}"
+        )
+
+    # --- Proceed with Creation ---
     
     # Scrape metadata
     metadata = get_url_metadata(button_in.original_url)
@@ -119,11 +165,5 @@ async def upload_icon(
     # Save file
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-        
-    # Return URL (assuming we mount /uploads)
-    # In production, this should be a full URL or CDN link.
-    # For this setup, we'll use a relative path that the frontend can prepend the backend URL to,
-    # or we can return the full URL if we know the backend host.
-    # Let's return a relative path "/static/uploads/{filename}" and mount it in server.py
     
     return {"icon_url": f"/static/uploads/{filename}"}
