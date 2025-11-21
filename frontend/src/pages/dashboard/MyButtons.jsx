@@ -82,22 +82,29 @@ const MyButtons = () => {
   };
 
   const onCreateButton = async (data) => {
+    console.log("Attempting to create button with data:", data);
     if (isExpired) {
       toast.error("Seu plano expirou. Renove para criar novos botões.");
       return;
     }
     setIsCreateLoading(true);
     try {
+      console.log("Sending POST request to:", `${API}/buttons/`);
       const response = await axios.post(`${API}/buttons/`, {
         original_url: data.url,
         category_id: selectedCategory !== "all" ? selectedCategory : null
       });
+      console.log("Button created successfully:", response.data);
       setButtons([response.data, ...buttons]);
       reset();
       setShowInstructions(true);
       toast.success("Botão criado com sucesso!");
     } catch (error) {
-      console.error("Failed to create button", error);
+      console.error("Failed to create button:", error);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+      }
       const errorMessage = error.response?.data?.detail || "Erro ao criar botão. Tente novamente.";
       toast.error(errorMessage);
     } finally {
