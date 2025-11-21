@@ -21,6 +21,7 @@ import PlansPage from "./pages/dashboard/PlansPage";
 import MyPlanPage from "./pages/dashboard/MyPlanPage";
 import PaymentPage from "./pages/dashboard/PaymentPage";
 import PaymentList from "./pages/admin/PaymentList";
+import RenewalNotices from "./pages/admin/RenewalNotices";
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
             {/* Admin Routes */}
             <Route path="admin/usuarios" element={<ProtectedRoute adminOnly><UserList /></ProtectedRoute>} />
             <Route path="admin/pagamentos" element={<ProtectedRoute adminOnly><PaymentList /></ProtectedRoute>} />
+            <Route path="admin/renovacoes" element={<ProtectedRoute adminOnly><RenewalNotices /></ProtectedRoute>} />
             <Route path="admin" element={<Navigate to="/admin/usuarios" replace />} />
           </Route>
 

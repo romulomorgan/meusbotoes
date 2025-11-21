@@ -25,6 +25,7 @@ const RegisterPage = () => {
       await registerUser({
         full_name: data.fullName,
         email: data.email,
+        phone: data.phone, // Added phone
         password: data.password,
         confirm_password: data.confirmPassword
       });
@@ -70,6 +71,15 @@ const RegisterPage = () => {
                 {...register("email", { required: "E-mail é obrigatório" })} 
               />
               {errors.email && <span className="text-sm text-destructive">{errors.email.message}</span>}
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefone (WhatsApp)</Label>
+              <Input 
+                id="phone" 
+                placeholder="5511999999999" 
+                {...register("phone", { required: "Telefone é obrigatório" })} 
+              />
+              {errors.phone && <span className="text-sm text-destructive">{errors.phone.message}</span>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
