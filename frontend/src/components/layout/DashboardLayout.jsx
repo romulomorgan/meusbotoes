@@ -33,15 +33,16 @@ const DashboardLayout = () => {
   const NavItem = ({ to, icon: Icon, label }) => {
     const isActive = location.pathname === to;
     return (
-      <Link to={to}>
-        <Button 
-          variant={isActive ? "secondary" : "ghost"} 
-          className="w-full justify-start gap-2 mb-1"
-        >
+      <Button 
+        variant={isActive ? "secondary" : "ghost"} 
+        className="w-full justify-start gap-2 mb-1"
+        asChild
+      >
+        <Link to={to}>
           <Icon className="h-4 w-4" />
           {label}
-        </Button>
-      </Link>
+        </Link>
+      </Button>
     );
   };
 
