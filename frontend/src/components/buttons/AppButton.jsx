@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Edit2, Trash2, Smartphone } from "lucide-react";
 
-const AppButton = ({ button, onEdit, onDelete, onShowInstructions }) => {
+const AppButton = ({ button, onEdit, onDelete, onShowInstructions, extraActions = [] }) => {
   const handleOpenLink = () => {
     window.open(button.original_url, '_blank', 'noopener,noreferrer');
   };
@@ -17,7 +17,7 @@ const AppButton = ({ button, onEdit, onDelete, onShowInstructions }) => {
   return (
     <div className="group relative flex flex-col items-center gap-2 p-4 rounded-xl hover:bg-muted/50 transition-colors">
       {/* Action Buttons (Visible on Hover) */}
-      <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+      <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
         <Button 
           variant="ghost" 
           size="icon" 
@@ -27,6 +27,20 @@ const AppButton = ({ button, onEdit, onDelete, onShowInstructions }) => {
         >
           <Smartphone className="h-3 w-3" />
         </Button>
+        
+        {extraActions.map((action, idx) => (
+          <Button 
+            key={idx}
+            variant="ghost" 
+            size="icon" 
+            className={`h-6 w-6 bg-background/80 backdrop-blur shadow-sm hover:bg-background ${action.className || ''}`}
+            onClick={(e) => { e.stopPropagation(); action.onClick(); }}
+            title={action.label}
+          >
+            <action.icon className="h-3 w-3" />
+          </Button>
+        ))}
+
         <Button 
           variant="ghost" 
           size="icon" 

@@ -1,18 +1,54 @@
-import React from 'react';
-import { useAuth } from '../../context/AuthContext';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, BarChart3, MousePointer2, Layers } from "lucide-react";
+import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Overview = () => {
   const { user } = useAuth();
+  const [stats, setStats] = useState({
+    totalButtons: 0,
+    totalClicks: 0,
+    categories: 0
+  });
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const [buttonsRes, categoriesRes] = await Promise.all([
+        axios.get(`${API}/buttons/`),
+        axios.get(`${API}/categories/`)
+      ]);
+      
+      const buttons = buttonsRes.data;
+      const totalClicks = buttons.reduce((acc, btn) => acc + (btn.click_count || 0), 0);
+      
+      setStats({
+        totalButtons: buttons.length,
+        totalClicks: totalClicks,
+        categories: categoriesRes.data.length
+      });
+    } catch (error) {
+      console.error("Failed to fetch stats", error);
+    }
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Olá, {user?.full_name?.split(' ')[0]}!</h1>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> Novo Botão
+        <Button asChild>
+          <Link to="/meus-botoes">
+            <Plus className="mr-2 h-4 w-4" /> Novo Botão
+          </Link>
         </Button>
       </div>
 
@@ -20,33 +56,36 @@ const Overview = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total de Botões</CardTitle>
+            <MousePointer2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{stats.totalButtons}</div>
             <p className="text-xs text-muted-foreground">
-              +0% em relação ao mês passado
+              Botões ativos na sua conta
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Cliques Totais</CardTitle>
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">0</div>
+            <div className="text-2xl font-bold">{stats.totalClicks}</div>
             <p className="text-xs text-muted-foreground">
-              +0% em relação ao mês passado
+              Acessos nos seus botões
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Plano Atual</CardTitle>
+            <CardTitle className="text-sm font-medium">Categorias</CardTitle>
+            <Layers className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Gratuito</div>
+            <div className="text-2xl font-bold">{stats.categories}</div>
             <p className="text-xs text-muted-foreground">
-              Faça upgrade para mais recursos
+              Categorias criadas
             </p>
           </CardContent>
         </Card>
@@ -55,23 +94,35 @@ const Overview = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
-            <CardTitle>Visão Geral</CardTitle>
+            <CardTitle>Dica Rápida</CardTitle>
           </CardHeader>
-          <CardContent className="pl-2">
-            <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-              Gráfico de cliques aparecerá aqui
+          <CardContent>
+            <div className="p-4 bg-muted rounded-lg">
+              <h3 className="font-semibold mb-2">Instale no seu celular</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                Para a melhor experiência, adicione o Meus Botões Web à tela inicial do seu smartphone.
+              </p>
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/instrucoes">Ver Instruções</Link>
+              </Button>
             </div>
           </CardContent>
         </Card>
         <Card className="col-span-3">
           <CardHeader>
-            <CardTitle>Botões Recentes</CardTitle>
+            <CardTitle>Status do Plano</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-8">
-              <p className="text-sm text-muted-foreground text-center py-8">
-                Você ainda não criou nenhum botão.
-              </p>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Plano Atual</span>
+                <span className="text-sm text-muted-foreground">
+                  {user?.current_plan_id ? "Ativo" : "Gratuito"}
+                </span>
+              </div>
+              <Button variant="secondary" className="w-full" asChild>
+                <Link to="/meus-planos">Gerenciar Assinatura</Link>
+              </Button>
             </div>
           </CardContent>
         </Card>

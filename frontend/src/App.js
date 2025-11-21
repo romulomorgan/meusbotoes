@@ -22,6 +22,7 @@ import MyPlanPage from "./pages/dashboard/MyPlanPage";
 import PaymentPage from "./pages/dashboard/PaymentPage";
 import PaymentList from "./pages/admin/PaymentList";
 import RenewalNotices from "./pages/admin/RenewalNotices";
+import SharePage from "./pages/SharePage";
 
 function App() {
   return (
@@ -43,6 +44,9 @@ function App() {
             
             <Route path="instrucoes" element={<InstructionsPage />} />
           </Route>
+
+          {/* Shared Button Route (Public) */}
+          <Route path="share/:buttonId" element={<SharePage />} />
 
           {/* Protected Dashboard Routes */}
           <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
