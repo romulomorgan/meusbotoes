@@ -65,11 +65,12 @@ async def get_status_checks():
     return status_checks
 
 # Include new routers
-from app.routes import auth, users, buttons, plans
+from app.routes import auth, users, buttons, plans, payments
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(buttons.router, prefix="/buttons", tags=["buttons"])
 api_router.include_router(plans.router, prefix="/plans", tags=["plans"])
+api_router.include_router(payments.router, prefix="/payments", tags=["payments"])
 
 # Include the router in the main app
 app.include_router(api_router)

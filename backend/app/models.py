@@ -96,3 +96,23 @@ class PlanInDB(PlanBase):
 
 class PlanResponse(PlanInDB):
     pass
+
+# --- Payment Models ---
+class PaymentBase(BaseModel):
+    plan_id: str
+
+class PaymentCreate(PaymentBase):
+    pass
+
+class PaymentInDB(PaymentBase):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    receipt_url: str
+    status: str = "pending" # pending, approved, rejected
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    model_config = ConfigDict(extra="ignore")
+
+class PaymentResponse(PaymentInDB):
+    user_email: Optional[str] = None
+    plan_name: Optional[str] = None
