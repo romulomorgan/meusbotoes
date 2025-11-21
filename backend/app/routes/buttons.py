@@ -67,8 +67,14 @@ async def create_button(
             print("DEBUG: No free plan found, Limit: 0")
 
     # 2. Count existing buttons
-    count = await db.buttons.count_documents({"user_id": current_user['id']})
+    # count = await db.buttons.count_documents({"user_id": current_user['id']})
+    # Explicitly fetch to debug
+    existing_buttons = await db.buttons.find({"user_id": current_user['id']}).to_list(1000)
+    count = len(existing_buttons)
+    
+    print(f"DEBUG: User ID: {current_user['id']}")
     print(f"DEBUG: Current button count: {count}")
+    print(f"DEBUG: Existing titles: {[b.get('title') for b in existing_buttons]}")
     
     # 3. Verify limit (if not unlimited i.e. -1)
     if limit != -1 and count >= limit:
