@@ -7,7 +7,7 @@ import uuid
 class UserBase(BaseModel):
     email: EmailStr
     full_name: str
-    phone: Optional[str] = None # Added phone
+    phone: Optional[str] = None
 
 class UserCreate(UserBase):
     password: str
@@ -52,11 +52,29 @@ class PasswordResetConfirm(BaseModel):
     new_password: str
     confirm_new_password: str
 
+# --- Category Models ---
+class CategoryBase(BaseModel):
+    name: str
+    color: str = "#000000"
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class CategoryInDB(CategoryBase):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    
+    model_config = ConfigDict(extra="ignore")
+
+class CategoryResponse(CategoryInDB):
+    pass
+
 # --- Button Models ---
 class ButtonBase(BaseModel):
     original_url: str
     title: Optional[str] = None
-    category: Optional[str] = None
+    category_id: Optional[str] = None # Changed from category string to ID
 
 class ButtonCreate(ButtonBase):
     pass
@@ -64,13 +82,16 @@ class ButtonCreate(ButtonBase):
 class ButtonUpdate(BaseModel):
     title: Optional[str] = None
     icon_url: Optional[str] = None
-    category: Optional[str] = None
+    category_id: Optional[str] = None
+    is_favorite: Optional[bool] = None # Added favorite
 
 class ButtonInDB(ButtonBase):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     title: str
     icon_url: str
+    is_favorite: bool = False # Added favorite
+    click_count: int = 0 # Added stats
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
     model_config = ConfigDict(extra="ignore")
