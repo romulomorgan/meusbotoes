@@ -9,7 +9,8 @@ import {
   Settings, 
   LogOut, 
   Users,
-  Menu
+  Menu,
+  ShoppingBag
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -48,8 +49,8 @@ const DashboardLayout = () => {
       <div className="flex-1 px-4 space-y-1">
         <NavItem to="/painel" icon={LayoutDashboard} label="Visão Geral" />
         <NavItem to="/meus-botoes" icon={MousePointer2} label="Meus Botões" />
-        <NavItem to="/planos" icon={CreditCard} label="Meus Planos" />
-        <NavItem to="/pagamento" icon={CreditCard} label="Pagamento" />
+        <NavItem to="/planos" icon={ShoppingBag} label="Assinar Planos" />
+        <NavItem to="/meus-planos" icon={CreditCard} label="Meu Plano" />
         <NavItem to="/configuracoes" icon={Settings} label="Configurações" />
         
         {user?.role === 'admin' && (
