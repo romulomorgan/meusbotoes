@@ -240,15 +240,18 @@ test_plan:
 
   - task: "Protected Route Access"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/auth/ProtectedRoute.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Protected route component implemented with authentication checks and loading states. Needs testing for unauthorized access redirection."
+        - working: true
+          agent: "testing"
+          comment: "✅ Protected route access control working correctly. When attempting to access /painel while logged out, user is properly redirected to /login page."
 
   - task: "Forgot Password Flow"
     implemented: true
