@@ -406,6 +406,79 @@ test_plan:
   test_all: false
   test_priority: "high_first"
 
+  - task: "Manifest.json Accessibility"
+    implemented: true
+    working: true
+    file: "/app/frontend/public/manifest.json"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Manifest.json is accessible at /manifest.json endpoint with proper PWA configuration. Contains correct short_name 'Meus Botões', name 'Meus Botões Web', icons array with favicon.ico, logo192.png, logo512.png, start_url, display: standalone, theme_color, and background_color."
+
+  - task: "Instructions Page (/instrucoes)"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/InstructionsPage.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Instructions page working perfectly. Page title 'Como Instalar' displays correctly, both Android and iOS tabs are present and functional. Tab switching works properly - iOS tab shows Safari and Compartilhar content, Android tab shows Chrome and menu content. All installation instructions are properly displayed with step-by-step guidance."
+
+  - task: "Smartphone Icon on Buttons"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/buttons/AppButton.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Smartphone icon functionality working perfectly. Icon appears on button hover with title 'Instalar no celular', clicking the icon successfully opens the 'Instalar no Celular' modal. Modal contains proper content with Android/iOS tabs and installation instructions."
+
+  - task: "Install Modal Functionality"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/pwa/InstallInstructions.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ Install modal working correctly. Modal opens when smartphone icon is clicked, displays 'Instalar no Celular' title with proper description. Both Android and iOS tabs are present and functional. Android tab shows Chrome installation steps (Passo 1: menu de três pontos, Passo 2: Adicionar à tela inicial), iOS tab shows Safari installation steps. Tab switching works properly."
+
+  - task: "PWA Hook (useInstallPrompt)"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/hooks/useInstallPrompt.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PWA hook working correctly without crashes. Browser capabilities detected properly: Service Worker supported, Install prompt supported. Hook properly detects OS (iOS/Android) and manages install prompt state. No console errors related to PWA functionality."
+
+metadata:
+  created_by: "testing_agent"
+  version: "4.0"
+  test_sequence: 4
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Phase 4 PWA Install Instructions Complete"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
 agent_communication:
     - agent: "testing"
       message: "Phase 1 structure testing completed successfully. All 5 major components verified: 1) Landing page content (title, input, button), 2) Navbar navigation (Login/Cadastre-se links), 3) Footer navigation (Termos/Privacidade/Contato links), 4) Placeholder pages with correct titles, 5) Layout consistency across all pages. No critical issues found. Application structure is solid and ready for Phase 2 development."
@@ -417,3 +490,5 @@ agent_communication:
       message: "Starting Phase 3 Button Generation testing. Will test: 1) Login as test user, 2) Navigate to Meus Botões (/meus-botoes), 3) Create Google button with proper icon/title, 4) Create GitHub button, 5) Search functionality filtering, 6) Edit button title functionality, 7) Delete button with confirmation, 8) Link navigation behavior."
     - agent: "testing"
       message: "Phase 3 Button Generation testing COMPLETED SUCCESSFULLY! All 5 core button management features working perfectly: ✅ Button creation with Google/GitHub URLs, proper metadata scraping, and icon display, ✅ Search functionality with real-time filtering (tested with 'Google' search), ✅ Edit functionality with title changes and persistence, ✅ Delete functionality with confirmation dialog, ✅ Link navigation with window.open (popup blocker may interfere but functionality works). Backend API integration confirmed: POST /api/buttons/ (200 OK), PUT /api/buttons/{id} (200 OK), DELETE /api/buttons/{id} (200 OK). Fixed missing get_current_user function in auth.py and decode_access_token in security.py during testing. No critical issues found."
+    - agent: "testing"
+      message: "Phase 4 PWA Install Instructions testing COMPLETED SUCCESSFULLY! All 5 core PWA features working perfectly: ✅ Manifest.json accessible with proper PWA configuration, ✅ Instructions page (/instrucoes) with functional Android/iOS tabs and installation guidance, ✅ Smartphone icon appears on buttons with proper hover functionality, ✅ 'Instalar no Celular' modal opens correctly with tabs and installation steps, ✅ PWA hook (useInstallPrompt) working without crashes and detecting browser capabilities. Created test user 'testphase4@example.com', successfully created GitHub button, and verified all PWA installation features. No critical issues found."
