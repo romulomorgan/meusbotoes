@@ -28,43 +28,51 @@ async def create_button(
     # --- Plan Limit Check ---
     # 1. Get current plan
     plan_id = current_user.get('current_plan_id')
-    limit = 0 # Default to 0 if no plan (or maybe a free tier default?)
+    limit = 0 # Default to 0
     
-    # If user has no plan, let's assume a default free tier of 0 or 1? 
-    # Requirement says "Plano 3 Botões" is one of the plans. 
-    # Let's assume if no plan is assigned, they can't create, OR we auto-assign free plan on register.
-    # For now, if no plan, we'll fetch the "Plano 3 Botões" (price 0) or just block.
-    # Better: Check if plan exists.
-    
+    print(f"DEBUG: Creating button for user {current_user.get('email')}")
+    print(f"DEBUG: Current Plan ID: {plan_id}")
+
     if plan_id:
         plan = await db.plans.find_one({"id": plan_id})
         if plan:
             limit = plan['button_limit']
+            print(f"DEBUG: Plan found: {plan.get('name')}, Limit: {limit}")
             
             # Check expiration
             expires_at_str = current_user.get('plan_expires_at')
             if expires_at_str:
-                expires_at = datetime.fromisoformat(expires_at_str)
-                # Ensure timezone awareness compatibility
-                if expires_at.tzinfo is None:
-                    expires_at = expires_at.replace(tzinfo=timezone.utc)
-                
-                if datetime.now(timezone.utc) > expires_at:
-                    raise HTTPException(status_code=403, detail="Seu plano expirou. Por favor, renove sua assinatura.")
+                try:
+                    expires_at = datetime.fromisoformat(expires_at_str)
+                    if expires_at.tzinfo is None:
+                        expires_at = expires_at.replace(tzinfo=timezone.utc)
+                    
+                    if datetime.now(timezone.utc) > expires_at:
+                        print("DEBUG: Plan expired")
+                        raise HTTPException(status_code=403, detail="Seu plano expirou. Por favor, renove sua assinatura.")
+                except ValueError:
+                    print("DEBUG: Invalid expiration date format")
+                    pass
+        else:
+            print("DEBUG: Plan ID found in user but plan not found in DB")
     else:
-        # Fallback: If no plan assigned, maybe allow 0 or find the free plan?
-        # Let's look for the free plan (price 0) and use its limit if user has no plan
+        # Fallback to free plan
+        print("DEBUG: No plan assigned, looking for free plan")
         free_plan = await db.plans.find_one({"price": 0.0})
         if free_plan:
             limit = free_plan['button_limit']
+            print(f"DEBUG: Free plan found, Limit: {limit}")
         else:
-            limit = 0 # Strict default
+            limit = 0
+            print("DEBUG: No free plan found, Limit: 0")
 
     # 2. Count existing buttons
     count = await db.buttons.count_documents({"user_id": current_user['id']})
+    print(f"DEBUG: Current button count: {count}")
     
     # 3. Verify limit (if not unlimited i.e. -1)
     if limit != -1 and count >= limit:
+        print(f"DEBUG: Limit reached! {count} >= {limit}")
         raise HTTPException(
             status_code=403, 
             detail=f"Seu plano não permite criar mais botões. Limite atual: {limit}"
