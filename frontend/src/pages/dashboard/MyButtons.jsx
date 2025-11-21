@@ -67,8 +67,11 @@ const MyButtons = () => {
       reset();
       // Show instructions after creating first button or randomly
       setShowInstructions(true);
+      toast.success("Botão criado com sucesso!");
     } catch (error) {
       console.error("Failed to create button", error);
+      const errorMessage = error.response?.data?.detail || "Erro ao criar botão. Tente novamente.";
+      toast.error(errorMessage);
     } finally {
       setIsCreateLoading(false);
     }
