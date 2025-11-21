@@ -19,6 +19,8 @@ import UserList from "./pages/admin/UserList";
 import InstructionsPage from "./pages/InstructionsPage";
 import PlansPage from "./pages/dashboard/PlansPage";
 import MyPlanPage from "./pages/dashboard/MyPlanPage";
+import PaymentPage from "./pages/dashboard/PaymentPage";
+import PaymentList from "./pages/admin/PaymentList";
 
 function App() {
   return (
@@ -47,12 +49,12 @@ function App() {
             <Route path="meus-botoes" element={<MyButtons />} />
             <Route path="planos" element={<PlansPage />} />
             <Route path="meus-planos" element={<MyPlanPage />} />
-            <Route path="pagamento" element={<PlaceholderPage />} />
+            <Route path="pagamento" element={<PaymentPage />} />
             <Route path="configuracoes" element={<PlaceholderPage />} />
             
             {/* Admin Routes */}
             <Route path="admin/usuarios" element={<ProtectedRoute adminOnly><UserList /></ProtectedRoute>} />
-            <Route path="admin/pagamentos" element={<ProtectedRoute adminOnly><PlaceholderPage /></ProtectedRoute>} />
+            <Route path="admin/pagamentos" element={<ProtectedRoute adminOnly><PaymentList /></ProtectedRoute>} />
             <Route path="admin" element={<Navigate to="/admin/usuarios" replace />} />
           </Route>
 

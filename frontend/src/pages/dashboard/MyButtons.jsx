@@ -9,6 +9,9 @@ import { Search, Plus, Loader2 } from "lucide-react";
 import AppButton from "@/components/buttons/AppButton";
 import InstallInstructions from "@/components/pwa/InstallInstructions";
 import { toast } from "sonner";
+import { useAuth } from '../../context/AuthContext';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +31,7 @@ const MyButtons = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [isCreateLoading, setIsCreateLoading] = useState(false);
+  const { user } = useAuth();
   
   // Edit/Delete State
   const [editingButton, setEditingButton] = useState(null);
@@ -41,6 +45,9 @@ const MyButtons = () => {
   const { register: registerEdit, handleSubmit: handleSubmitEdit, reset: resetEdit } = useForm();
   
   const [selectedFile, setSelectedFile] = useState(null);
+
+  // Check Expiration
+  const isExpired = user?.plan_expires_at && new Date(user.plan_expires_at) < new Date();
 
   useEffect(() => {
     fetchButtons();
@@ -58,6 +65,10 @@ const MyButtons = () => {
   };
 
   const onCreateButton = async (data) => {
+    if (isExpired) {
+      toast.error("Seu plano expirou. Renove para criar novos botões.");
+      return;
+    }
     setIsCreateLoading(true);
     try {
       const response = await axios.post(`${API}/buttons/`, {
@@ -65,7 +76,6 @@ const MyButtons = () => {
       });
       setButtons([response.data, ...buttons]);
       reset();
-      // Show instructions after creating first button or randomly
       setShowInstructions(true);
       toast.success("Botão criado com sucesso!");
     } catch (error) {
@@ -78,6 +88,7 @@ const MyButtons = () => {
   };
 
   const onEditButton = (button) => {
+    if (isExpired) return;
     setEditingButton(button);
     resetEdit({ title: button.title });
     setSelectedFile(null);
@@ -133,8 +144,19 @@ const MyButtons = () => {
         </div>
       </div>
 
+      {isExpired && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>Plano Expirado</AlertTitle>
+          <AlertDescription>
+            Sua assinatura venceu. Seus botões estão inativos e você não pode criar novos. 
+            <a href="/planos" className="font-bold underline ml-1">Renove agora.</a>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Create Section */}
-      <div className="bg-card border rounded-xl p-6 shadow-sm">
+      <div className={`bg-card border rounded-xl p-6 shadow-sm ${isExpired ? 'opacity-50 pointer-events-none' : ''}`}>
         <form onSubmit={handleSubmit(onCreateButton)} className="flex flex-col md:flex-row gap-4 items-end">
           <div className="flex-1 w-full space-y-2">
             <Label htmlFor="url">Novo Botão</Label>
@@ -143,10 +165,11 @@ const MyButtons = () => {
               placeholder="Cole o link aqui (ex: https://youtube.com)" 
               {...register("url", { required: "URL é obrigatória" })}
               className="h-12"
+              disabled={isExpired}
             />
             {errors.url && <span className="text-sm text-destructive">{errors.url.message}</span>}
           </div>
-          <Button type="submit" size="lg" className="h-12 px-8" disabled={isCreateLoading}>
+          <Button type="submit" size="lg" className="h-12 px-8" disabled={isCreateLoading || isExpired}>
             {isCreateLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Gerando...
@@ -181,7 +204,7 @@ const MyButtons = () => {
           <p className="text-muted-foreground">Nenhum botão encontrado.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+        <div className={`grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4 ${isExpired ? 'grayscale opacity-70 pointer-events-none' : ''}`}>
           {filteredButtons.map(button => (
             <AppButton 
               key={button.id} 
