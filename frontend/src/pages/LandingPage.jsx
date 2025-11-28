@@ -11,12 +11,6 @@ const LandingPage = () => {
       
       <div className="container px-4 md:px-6 flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto py-20 md:py-32">
         
-        {/* Badge/Pill */}
-        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80">
-          <Sparkles className="w-3 h-3 mr-1" />
-          Fase 1: Estrutura Visual
-        </div>
-
         {/* Main Headline (Optional but good for design) */}
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-600 pb-2">
           Crie botões incríveis.
