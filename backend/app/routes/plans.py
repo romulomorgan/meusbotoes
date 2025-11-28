@@ -124,22 +124,6 @@ async def seed_plans(db):
                 "id": str(uuid.uuid4())
             },
             {
-                "name": "Plano 7 Botões",
-                "description": "Para usuários ativos",
-                "price": 9.90,
-                "button_limit": 7,
-                "duration_days": 30,
-                "id": str(uuid.uuid4())
-            },
-            {
-                "name": "Plano 20 Botões",
-                "description": "Para power users",
-                "price": 19.90,
-                "button_limit": 20,
-                "duration_days": 30,
-                "id": str(uuid.uuid4())
-            },
-            {
                 "name": "Plano Ilimitado",
                 "description": "Sem restrições",
                 "price": 49.90,
@@ -150,3 +134,8 @@ async def seed_plans(db):
         ]
         await db.plans.insert_many(plans)
         print("Plans seeded successfully.")
+    else:
+        # If plans exist, remove the ones we don't want (7 and 20 buttons)
+        # This is a migration step for existing deployments
+        await db.plans.delete_many({"button_limit": {"$in": [7, 20]}})
+        print("Removed deprecated plans (7 and 20 buttons).")
