@@ -229,11 +229,6 @@ const MyButtons = () => {
           <h1 className="text-3xl font-bold tracking-tight">Meus Botões</h1>
           <p className="text-muted-foreground">Gerencie seus links como aplicativos.</p>
         </div>
-        <div className="flex gap-2">
-           <Button variant="outline" onClick={() => setIsCategoryDialogOpen(true)}>
-             <FolderPlus className="mr-2 h-4 w-4" /> Nova Categoria
-           </Button>
-        </div>
       </div>
 
       {isExpired && (
@@ -286,32 +281,7 @@ const MyButtons = () => {
             className="pl-10"
           />
         </div>
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Categoria" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Todas as Categorias</SelectItem>
-            {categories.map(cat => (
-              <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
-
-      {/* Categories Management (Mini List) */}
-      {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {categories.map(cat => (
-            <div key={cat.id} className="flex items-center gap-1 px-3 py-1 bg-secondary rounded-full text-xs">
-              {cat.name}
-              <button onClick={() => handleDeleteCategory(cat.id)} className="text-muted-foreground hover:text-destructive ml-1">
-                <Trash2 className="h-3 w-3" />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Grid */}
       {loading ? (
