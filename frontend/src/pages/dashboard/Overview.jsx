@@ -92,22 +92,6 @@ const Overview = () => {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Dica Rápida</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="p-4 bg-muted rounded-lg">
-              <h3 className="font-semibold mb-2">Instale no seu celular</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Para a melhor experiência, adicione o Meus Botões Web à tela inicial do seu smartphone.
-              </p>
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/instrucoes">Ver Instruções</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
         <Card className="col-span-3">
           <CardHeader>
             <CardTitle>Status do Plano</CardTitle>
