@@ -29,7 +29,7 @@ const LandingPage = () => {
                 Transforme Links em Apps.
               </h1>
               <p className="text-xl text-muted-foreground max-w-[600px] mx-auto lg:mx-0">
-                Crie botões personalizados para seus sites favoritos e adicione-os à tela inicial do seu celular. Simples, rápido e organizado.
+                Crie botões personalizados para seus sites favoritos e adicione-os à tela inicial do seu celular, tablet ou computador. Simples, rápido e organizado.
               </p>
             </div>
 
