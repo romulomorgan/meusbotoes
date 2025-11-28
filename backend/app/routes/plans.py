@@ -112,30 +112,54 @@ async def update_plan(
 
 # --- Seeding ---
 async def seed_plans(db):
-    count = await db.plans.count_documents({})
-    if count == 0:
-        plans = [
-            {
-                "name": "Plano 3 Botões",
-                "description": "Ideal para começar",
-                "price": 0.0,
-                "button_limit": 3,
-                "duration_days": 30,
-                "id": str(uuid.uuid4())
-            },
-            {
-                "name": "Plano Ilimitado",
-                "description": "Sem restrições",
-                "price": 49.90,
-                "button_limit": -1,
-                "duration_days": 30,
-                "id": str(uuid.uuid4())
+    # 1. Update/Migrate "Plano 3 Botões" to "Plano 7 Botões"
+    # We look for the old plan by name or properties
+    await db.plans.update_one(
+        {"name": "Plano 3 Botões"},
+        {
+            "$set": {
+                "name": "Plano 7 Botões",
+                "button_limit": 7,
+                "description": "Ideal para começar (Gratuito)"
             }
-        ]
-        await db.plans.insert_many(plans)
-        print("Plans seeded successfully.")
-    else:
-        # If plans exist, remove the ones we don't want (7 and 20 buttons)
-        # This is a migration step for existing deployments
-        await db.plans.delete_many({"button_limit": {"$in": [7, 20]}})
-        print("Removed deprecated plans (7 and 20 buttons).")
+        }
+    )
+    
+    # 2. Update "Plano Ilimitado" price to 9.90
+    await db.plans.update_one(
+        {"name": "Plano Ilimitado"},
+        {
+            "$set": {
+                "price": 9.90,
+                "description": "Sem restrições (Oferta Especial)"
+            }
+        }
+    )
+
+    # 3. Ensure plans exist if DB was empty
+    # Check if "Plano 7 Botões" exists
+    if not await db.plans.find_one({"name": "Plano 7 Botões"}):
+        await db.plans.insert_one({
+            "name": "Plano 7 Botões",
+            "description": "Ideal para começar (Gratuito)",
+            "price": 0.0,
+            "button_limit": 7,
+            "duration_days": 30,
+            "id": str(uuid.uuid4())
+        })
+        
+    # Check if "Plano Ilimitado" exists
+    if not await db.plans.find_one({"name": "Plano Ilimitado"}):
+        await db.plans.insert_one({
+            "name": "Plano Ilimitado",
+            "description": "Sem restrições (Oferta Especial)",
+            "price": 9.90,
+            "button_limit": -1,
+            "duration_days": 30,
+            "id": str(uuid.uuid4())
+        })
+
+    # 4. Cleanup deprecated plans (20 buttons, etc)
+    await db.plans.delete_many({"button_limit": {"$in": [3, 20]}}) # 3 is deleted if it wasn't renamed (e.g. duplicate)
+    
+    print("Plans updated successfully.")
